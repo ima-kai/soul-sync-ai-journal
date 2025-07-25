@@ -16,7 +16,7 @@ const Avatar = ({ src, size = 'md', className = '' }: AvatarProps) => {
     xl: 'w-32 h-32'
   };
   
-  const defaultAvatar = "https://api.dicebear.com/7.x/avataaars/svg?seed=soulsync&backgroundColor=ffd5dc,ffdfba,d1d4f9&clothesColor=ff6b9d,65c9ff,5199e4";
+  const defaultAvatar = "https://api.dicebear.com/7.x/croodles-neutral/svg?seed=soulsync&backgroundColor=b6e3f4,c0aede,d1d4f9&mood=happy&facialHairProbability=0";
   
   return (
     <div className={`${sizeClasses[size]} rounded-full overflow-hidden shadow-dreamy ring-4 ring-primary/20 float ${className}`}>
