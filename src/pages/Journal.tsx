@@ -111,7 +111,7 @@ const Journal = () => {
                   >
                     {isAnalyzing || isGettingResponse ? (
                       <div className="typing-dots">
-                        {isAnalyzing ? 'Reading your soul...' : 'Your future self is thinking...'}
+                        {isAnalyzing ? 'Reading your soul' : 'Your Future Self is responding'}
                       </div>
                     ) : (
                       <>
@@ -123,6 +123,22 @@ const Journal = () => {
                 </CardContent>
               </Card>
               
+              {/* Mood Detection */}
+              {mood && (
+                <Card className="bg-card/60 backdrop-blur-lg border-border/50 shadow-dreamy animate-fade-in">
+                  <CardContent className="p-6">
+                    <div className="text-center">
+                      <div className="text-4xl mb-2 emoji-bounce">{mood.emoji}</div>
+                      <h3 className="text-xl font-bold gradient-energy bg-clip-text text-transparent mb-2">
+                        Mood Detected: {mood.mood}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Confidence: {Math.round(mood.confidence * 100)}% 
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
               
               {/* Future Self Response */}
               {showResponse && futureSelfResponse && (

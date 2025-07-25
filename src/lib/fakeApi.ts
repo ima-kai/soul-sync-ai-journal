@@ -29,11 +29,11 @@ export const FAKE_API_GENERATE_AVATAR = async (imageFile?: File): Promise<string
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 2000));
   
-  // Return a cute generated avatar URL (older/stylized version)
+  // Return a cute generated avatar URL (placeholder)
   const avatarStyles = [
-    "https://api.dicebear.com/7.x/croodles-neutral/svg?seed=older1&backgroundColor=b6e3f4,c0aede,d1d4f9&mood=wise&facialHairProbability=0",
-    "https://api.dicebear.com/7.x/croodles-neutral/svg?seed=older2&backgroundColor=ffd5dc,ffdfba,d1d4f9&mood=thoughtful&facialHairProbability=0",
-    "https://api.dicebear.com/7.x/croodles-neutral/svg?seed=older3&backgroundColor=c7ceea,ffd3e4,d1d4f9&mood=peaceful&facialHairProbability=0"
+    "https://api.dicebear.com/7.x/avataaars/svg?seed=soul1&backgroundColor=b6e3f4,c0aede,d1d4f9&clothesColor=25557c,65c9ff,5199e4",
+    "https://api.dicebear.com/7.x/avataaars/svg?seed=soul2&backgroundColor=ffd5dc,ffdfba,d1d4f9&clothesColor=ff6b9d,65c9ff,5199e4",
+    "https://api.dicebear.com/7.x/avataaars/svg?seed=soul3&backgroundColor=c7ceea,ffd3e4,d1d4f9&clothesColor=662d91,ff6b9d,65c9ff"
   ];
   
   return avatarStyles[Math.floor(Math.random() * avatarStyles.length)];
@@ -114,14 +114,14 @@ export const FAKE_API_FUTURE_SELF_RESPONSE = async (
     ],
     sad: [
       {
-        message: "Hey beautiful soul... I see you, and I feel this with you. 💙 You have to do this - not just for you, but for me too.",
-        advice: "Let yourself feel this fully, but remember - this pain is shaping us into someone incredible.",
-        encouragement: "I know it's hard right now, but I'm here. We're going to make it through this together, I promise. 🫂"
+        message: "I see you, and I feel this with you. 💙 This sadness is temporary, but your strength is eternal.",
+        advice: "Let yourself feel this fully - it's part of our journey to joy.",
+        encouragement: "You're so much stronger than you know. I'm here, and we'll get through this together. 🫂"
       }
     ],
     anxious: [
       {
-        message: "Hey Googler... I see that worried mind of yours spinning. 🌈 But I want you to know - everything works out beautifully.",
+        message: "I understand this anxiety, and I want you to know - everything works out beautifully. 🌈",
         advice: "Take three deep breaths with me. Focus on what you can control right now.",
         encouragement: "Your courage in facing these feelings is exactly what makes us unstoppable. You've got this! 💪"
       }

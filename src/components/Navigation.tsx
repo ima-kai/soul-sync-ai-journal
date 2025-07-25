@@ -5,7 +5,7 @@ const Navigation = () => {
   const location = useLocation();
   
   const navItems = [
-    { icon: Home, label: 'Home', path: '/welcome', emoji: '🏠' },
+    { icon: Home, label: 'Home', path: '/', emoji: '🏠' },
     { icon: PenTool, label: 'Journal', path: '/journal', emoji: '📝' },
     { icon: Music, label: 'Music', path: '/journal', emoji: '🎵' },
     { icon: User, label: 'Profile', path: '/onboard', emoji: '🧑‍💼' },
