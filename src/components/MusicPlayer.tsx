@@ -1,7 +1,7 @@
-import { useState, useRef } from 'react';
-import { Play, Pause, Volume2, ExternalLink } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Play, Pause, Volume2, ExternalLink, Music } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Mood, FAKE_API_GET_AI_MUSIC, spotifyPlaylists } from '@/lib/fakeApi';
+import { Mood, FAKE_API_GET_AI_MUSIC, FAKE_API_GET_SPOTIFY_SONGS, spotifyPlaylists } from '@/lib/fakeApi';
 
 interface MusicPlayerProps {
   mood: Mood;
@@ -9,8 +9,11 @@ interface MusicPlayerProps {
 
 const MusicPlayer = ({ mood }: MusicPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const [isLoadingSpotify, setIsLoadingSpotify] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [spotifySongs, setSpotifySongs] = useState<any[]>([]);
+  const [currentSpotifyIndex, setCurrentSpotifyIndex] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
   
   const moodEmojis: Record<Mood, string> = {
@@ -23,21 +26,54 @@ const MusicPlayer = ({ mood }: MusicPlayerProps) => {
     energetic: '⚡'
   };
   
-  const handlePlayAIMusic = async () => {
-    setIsLoading(true);
-    try {
-      const url = await FAKE_API_GET_AI_MUSIC(mood);
-      setAudioUrl(url);
+  // Auto-load AI music and Spotify songs when mood changes
+  useEffect(() => {
+    const loadMusicForMood = async () => {
+      setIsLoadingAI(true);
+      setIsLoadingSpotify(true);
       
-      if (audioRef.current) {
-        audioRef.current.src = url;
-        await audioRef.current.play();
-        setIsPlaying(true);
+      try {
+        // Load AI music
+        const aiUrl = await FAKE_API_GET_AI_MUSIC(mood);
+        setAudioUrl(aiUrl);
+        
+        // Load Spotify songs
+        const songs = await FAKE_API_GET_SPOTIFY_SONGS(mood);
+        setSpotifySongs(songs);
+        setCurrentSpotifyIndex(0);
+        
+        // Auto-play AI music
+        if (audioRef.current) {
+          audioRef.current.src = aiUrl;
+          setTimeout(() => {
+            audioRef.current?.play();
+            setIsPlaying(true);
+          }, 500);
+        }
+      } catch (error) {
+        console.error('Error loading music:', error);
+      } finally {
+        setIsLoadingAI(false);
+        setIsLoadingSpotify(false);
       }
-    } catch (error) {
-      console.error('Error playing AI music:', error);
-    } finally {
-      setIsLoading(false);
+    };
+    
+    loadMusicForMood();
+  }, [mood]);
+
+  const handlePlayAIMusic = async () => {
+    if (audioRef.current && audioUrl) {
+      audioRef.current.src = audioUrl;
+      await audioRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  const handlePlaySpotifySong = async (songUrl: string) => {
+    if (audioRef.current && songUrl) {
+      audioRef.current.src = songUrl;
+      await audioRef.current.play();
+      setIsPlaying(true);
     }
   };
   
@@ -75,14 +111,14 @@ const MusicPlayer = ({ mood }: MusicPlayerProps) => {
             variant="energy"
             size="lg"
             onClick={handlePlayAIMusic}
-            disabled={isLoading}
+            disabled={isLoadingAI || !audioUrl}
             className="flex-1"
           >
-            {isLoading ? (
-              <div className="typing-dots">Generating</div>
+            {isLoadingAI ? (
+              <div className="typing-dots">Loading AI Vibes</div>
             ) : (
               <>
-                🎧 Generate AI Music
+                🎧 Play AI Music
               </>
             )}
           </Button>
@@ -116,6 +152,33 @@ const MusicPlayer = ({ mood }: MusicPlayerProps) => {
           </div>
         )}
         
+        {/* Spotify Songs */}
+        {spotifySongs.length > 0 && (
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <Music className="w-4 h-4" />
+              Spotify Recommendations
+            </h4>
+            {spotifySongs.slice(0, 3).map((song, index) => (
+              <div key={index} className="bg-background/30 rounded-lg p-3 flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handlePlaySpotifySong(song.preview_url)}
+                  disabled={!song.preview_url}
+                  className="shrink-0 w-8 h-8"
+                >
+                  <Play className="w-3 h-3" />
+                </Button>
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-medium truncate">{song.name}</div>
+                  <div className="text-xs text-muted-foreground truncate">{song.artist}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        
         {/* Spotify Playlist */}
         <Button
           variant="dreamy"
@@ -124,7 +187,7 @@ const MusicPlayer = ({ mood }: MusicPlayerProps) => {
           className="w-full"
         >
           <ExternalLink className="w-4 h-4 mr-2" />
-          🔗 Open Spotify Playlist
+          🔗 Open Full Playlist
         </Button>
       </div>
     </div>

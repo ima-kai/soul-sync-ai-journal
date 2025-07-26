@@ -129,12 +129,6 @@ const Journal = () => {
                   <CardContent className="p-6">
                     <div className="text-center">
                       <div className="text-4xl mb-2 emoji-bounce">{mood.emoji}</div>
-                      <h3 className="text-xl font-bold gradient-energy bg-clip-text text-transparent mb-2">
-                        Mood Detected: {mood.mood}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        Confidence: {Math.round(mood.confidence * 100)}% 
-                      </p>
                     </div>
                   </CardContent>
                 </Card>

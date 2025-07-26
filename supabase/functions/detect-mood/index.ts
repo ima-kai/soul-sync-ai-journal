@@ -16,8 +16,7 @@ serve(async (req) => {
 Journal text: "${journal}"
 
 Respond with a JSON object containing:
-- mood: one of these exact values: "happy", "calm", "excited", "thoughtful", "sad", "anxious", "energetic"
-- confidence: a number between 0 and 1
+- mood: one of these exact values: "happy", "calm", "excited", "thoughtful", "sad", "anxious", "energetic"  
 - emoji: an appropriate emoji for the mood
 
 Be accurate and empathetic in your analysis.`
@@ -85,7 +84,6 @@ Be accurate and empathetic in your analysis.`
 
       parsedResponse = {
         mood: detectedMood,
-        confidence: maxMatches > 0 ? 0.8 : 0.6,
         emoji: moodEmojis[detectedMood as keyof typeof moodEmojis]
       }
     }

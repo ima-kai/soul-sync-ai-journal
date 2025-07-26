@@ -14,7 +14,6 @@ export type Mood = 'happy' | 'calm' | 'excited' | 'thoughtful' | 'sad' | 'anxiou
 
 export interface MoodResult {
   mood: Mood;
-  confidence: number;
   emoji: string;
 }
 
@@ -83,7 +82,6 @@ export const FAKE_API_DETECT_MOOD = async (journal: string): Promise<MoodResult>
     
     return {
       mood: detectedMood,
-      confidence: Math.min(0.6 + maxMatches * 0.15, 0.95),
       emoji: moodMapping[detectedMood].emoji
     };
   }
@@ -170,23 +168,71 @@ export const FAKE_API_FUTURE_SELF_RESPONSE = async (
   }
 };
 
-// Fake API: Get AI-generated music based on mood
+// Hardcoded AI-generated music URLs for each mood
+export const hardcodedAIMusic: Record<Mood, string> = {
+  happy: "https://example.com/ai-music/happy-vibes.mp3",
+  calm: "https://example.com/ai-music/peaceful-meditation.mp3", 
+  excited: "https://example.com/ai-music/energy-burst.mp3",
+  thoughtful: "https://example.com/ai-music/deep-reflection.mp3",
+  sad: "https://example.com/ai-music/healing-journey.mp3",
+  anxious: "https://example.com/ai-music/calm-anxiety.mp3",
+  energetic: "https://example.com/ai-music/power-boost.mp3"
+};
+
+// API: Get AI-generated music based on mood
 export const FAKE_API_GET_AI_MUSIC = async (mood: Mood): Promise<string> => {
-  // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // Return placeholder audio URLs (you can replace with actual generated music)
-  const musicUrls: Record<Mood, string> = {
-    happy: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
-    calm: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
-    excited: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
-    thoughtful: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
-    sad: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
-    anxious: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
-    energetic: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav"
-  };
-  
-  return musicUrls[mood];
+  return hardcodedAIMusic[mood];
+};
+
+// API: Get Spotify songs based on mood
+export const FAKE_API_GET_SPOTIFY_SONGS = async (mood: Mood): Promise<any[]> => {
+  try {
+    const response = await fetch('/api/spotify-songs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mood }),
+    });
+
+    if (!response.ok) throw new Error('Failed to get Spotify songs');
+    return await response.json();
+  } catch (error) {
+    console.error('Error getting Spotify songs:', error);
+    
+    // Fallback hardcoded songs
+    const fallbackSongs: Record<Mood, any[]> = {
+      happy: [
+        { name: "Happy", artist: "Pharrell Williams", preview_url: "https://example.com/spotify/happy1.mp3" },
+        { name: "Good 4 U", artist: "Olivia Rodrigo", preview_url: "https://example.com/spotify/happy2.mp3" }
+      ],
+      calm: [
+        { name: "Weightless", artist: "Marconi Union", preview_url: "https://example.com/spotify/calm1.mp3" },
+        { name: "River", artist: "Leon Bridges", preview_url: "https://example.com/spotify/calm2.mp3" }
+      ],
+      excited: [
+        { name: "Can't Stop the Feeling", artist: "Justin Timberlake", preview_url: "https://example.com/spotify/excited1.mp3" },
+        { name: "Uptown Funk", artist: "Bruno Mars", preview_url: "https://example.com/spotify/excited2.mp3" }
+      ],
+      thoughtful: [
+        { name: "The Night We Met", artist: "Lord Huron", preview_url: "https://example.com/spotify/thoughtful1.mp3" },
+        { name: "Mad World", artist: "Gary Jules", preview_url: "https://example.com/spotify/thoughtful2.mp3" }
+      ],
+      sad: [
+        { name: "Someone Like You", artist: "Adele", preview_url: "https://example.com/spotify/sad1.mp3" },
+        { name: "Hurt", artist: "Johnny Cash", preview_url: "https://example.com/spotify/sad2.mp3" }
+      ],
+      anxious: [
+        { name: "Breathe", artist: "Telepopmusik", preview_url: "https://example.com/spotify/anxious1.mp3" },
+        { name: "Stress Relief", artist: "Nature Sounds", preview_url: "https://example.com/spotify/anxious2.mp3" }
+      ],
+      energetic: [
+        { name: "Thunder", artist: "Imagine Dragons", preview_url: "https://example.com/spotify/energetic1.mp3" },
+        { name: "Eye of the Tiger", artist: "Survivor", preview_url: "https://example.com/spotify/energetic2.mp3" }
+      ]
+    };
+    
+    return fallbackSongs[mood] || fallbackSongs.thoughtful;
+  }
 };
 
 // Spotify playlist mapping
