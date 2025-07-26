@@ -8,6 +8,18 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    proxy: {
+      '/api': {
+        target: process.env.SUPABASE_URL ? 
+          `${process.env.SUPABASE_URL}/functions/v1` : 
+          'http://localhost:54321/functions/v1',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        headers: {
+          'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY || ''}`
+        }
+      }
+    }
   },
   plugins: [
     react(),
