@@ -15,6 +15,7 @@ import Avatar from '@/components/Avatar';
 import DynamicBackground from '@/components/DynamicBackground';
 import MusicPlayer from '@/components/MusicPlayer';
 import Navigation from '@/components/Navigation';
+import SoulStats from '@/components/SoulStats';
 
 const Journal = () => {
   const [journalText, setJournalText] = useState('');
@@ -179,6 +180,9 @@ const Journal = () => {
               <div className="hidden md:block">
                 <Navigation />
               </div>
+              
+              {/* Soul Stats */}
+              <SoulStats />
             </div>
           </div>
         </div>
